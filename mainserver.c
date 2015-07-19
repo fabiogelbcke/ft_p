@@ -30,13 +30,24 @@ int	main(int ac, char ** av)
 	char	buf[1024];
 	int	r;
 
+	FILE *outputFile = fopen("output.txt", "wb");
 	port = ft_atoi(av[1]);
 	sock = create_server(port);
 	cs = accept(sock, (struct sockaddr*)&csin, &cslen);
-	while ((r = read(cs, buf, 1023)) > 0)
+	while (1)
 	{
-		buf[r] = '\0';
-		printf("received %d bytes\n", r);
+		char recvBuff[10];
+		
+		int bytesReceived = recv(cs, recvBuff, 10, 0);
+		while(bytesReceived != 0)
+		{
+			
+			// you should add error checking here
+			fwrite(recvBuff, bytesReceived, 1, outputFile);
+			
+			bytesReceived = recv(cs, recvBuff, 10, 0);
+		}
+		close(cs);
 	}
 	close(cs);
 	close(sock);

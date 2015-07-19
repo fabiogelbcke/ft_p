@@ -1,5 +1,32 @@
 #include "server.h"
 
+
+void				handle_command(char **cmd, char **entries)
+{
+	
+}
+
+char				**get_entry(void)
+{
+	int			n;
+	char		*str;
+	int			size;
+	char		**entries;
+
+	n = 1;
+	str = malloc(sizeof(char) * BUFF_SIZE);
+	n = read(0, str, BUFF_SIZE);
+	str[ft_strlen(str) - 1] = '\0';
+	entries = ft_strsplit(str, ';');
+	if (entries[0] == NULL)
+	{
+		entries = malloc(sizeof(char*) * 2);
+		entries[0] = NULL;
+		entries[1] = NULL;
+	}
+	return (entries);
+}
+
 int	create_client(char *addr, int port)
 {
 	int sock;
@@ -15,22 +42,66 @@ int	create_client(char *addr, int port)
 	sin.sin_addr.s_addr = inet_addr(addr);
 	if (connect(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
 		ft_putstr("Connect error");
+
 	listen(sock, 50);
 	return (sock);
+}
+
+void	client_shell(int port, int sock)
+{
+	char			**cmd;
+	char			**entries;
+
+	entries = NULL;
+ 	 while (1)
+	{
+		if (!entries || (!*(entries)))
+			ft_putstr("$> ");
+		entries = get_entry();
+		while (*entries)
+		{
+			cmd = ft_strsplit(*entries, ' ');
+			if (cmd[0] && !ft_strcmp(cmd[0], "exit"))
+				return ;
+			handle_command(cmd, entries);
+			write(sock, cmd[0], ft_strlen(cmd[0]) + 1);
+			entries++;
+		}
+	}
 }
 
 int	main(int ac, char ** av)
 {
 	int port;
 	int sock;
+	char buffer[1024];
 
 	if (ac < 3)
 		ft_putendl("usage");
 	port = ft_atoi(av[2]);
 	sock = create_client(av[1], port);
-	write(sock, "bonjour\n", 8);
+	FILE *inputFile = fopen("inputFile.txt", "rb");
+	
+	if(inputFile == NULL)
+	{
+		fprintf(stderr, "oh no!");
+		return 1;
+	}
+	
+	char sendBuffer[10];
+	
+// TODO: Check for errors here
+	int bytesRead = fread(sendBuffer, sizeof(sendBuffer), 1, inputFile);
+	
+	while(!feof(inputFile))
+	{
+		//TODO: check for errors here
+		send(sock, sendBuffer, bytesRead, 0);
+		bytesRead = fread(sendBuffer, sizeof(sendBuffer), 1, inputFile);
+	} 
 
-	close(sock);
+        close(sock);
+	client_shell(port, sock);
 	return (0);
 }
 
