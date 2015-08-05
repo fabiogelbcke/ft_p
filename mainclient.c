@@ -74,21 +74,24 @@ int	main(int ac, char ** av)
 {
 	int port;
 	int sock;
-	char buffer[1024];
+	char buffer[256];
 
 	if (ac < 3)
+        {
 		ft_putendl("usage");
+                return (1);
+        }
 	port = ft_atoi(av[2]);
 	sock = create_client(av[1], port);
-	FILE *inputFile = fopen("inputFile.txt", "rb");
+        int fd = open("inputFile.txt", O_RDONLY);
 	
-	if(inputFile == NULL)
+	if(fd < 0)
 	{
 		fprintf(stderr, "oh no!");
 		return 1;
 	}
-	
-	char sendBuffer[10];
+	/*
+	char sendBuffer[100];
 	
 // TODO: Check for errors here
 	int bytesRead = fread(sendBuffer, sizeof(sendBuffer), 1, inputFile);
@@ -99,9 +102,16 @@ int	main(int ac, char ** av)
 		send(sock, sendBuffer, bytesRead, 0);
 		bytesRead = fread(sendBuffer, sizeof(sendBuffer), 1, inputFile);
 	} 
-
+        */
+        int bytesread = read(fd, buffer, 256);
+        while (bytesread > 0)
+        {
+            send(sock, buffer, bytesread, 0);
+            bytesread = read(fd,buffer,256);
+        }
+//        close(sock);
+//	client_shell(port, sock);
         close(sock);
-	client_shell(port, sock);
 	return (0);
 }
 

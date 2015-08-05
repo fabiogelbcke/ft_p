@@ -16,6 +16,8 @@ NAME_C = client
 
 NAME_S = server
 
+all: client server
+
 client: $(NAME_C)
 
 server: $(NAME_S)
@@ -27,8 +29,6 @@ $(NAME_C): $(OBJ_C)
 $(NAME_S): $(OBJ_S)
 	$(MAKE) -C ./libft
 	$(CC) -o $(NAME_S) $(FLAGS) $(OBJ_S) $(LIB)
-
-all: client server
 
 clean:
 	rm -f $(OBJ_C) $(OBJ_S)

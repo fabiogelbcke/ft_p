@@ -8,6 +8,7 @@
 # include "libft/Includes/libft.h"
 # include <unistd.h>
 # include <netdb.h>
+# include <fcntl.h>
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
