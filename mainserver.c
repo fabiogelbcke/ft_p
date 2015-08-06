@@ -20,40 +20,59 @@ int	create_server(int port)
 	return (sock);
 }
 
+void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock)
+{
+    int cs;
+    char buf[257];
+    int pid;
+
+    ft_memset(buf, 0, 257);
+    while (1)
+    {
+        ft_putstr("oi");
+        cs = accept(sock, (struct sockaddr*)&csin, &cslen);
+        int status;
+        if ((pid = fork()) == -1)
+        {
+            close(cs);
+            continue;
+        }
+        else if (pid > 0)
+        {
+//            wait(&status);
+            close(cs);
+            ft_putstr("parent");
+            continue;
+            //parent process
+        }
+        else if (pid == 0)
+        {
+            int bytesReceived = recv(cs, buf, 1000, 0);
+            
+            if (bytesReceived != 0)
+                ft_putstr(buf);
+            ft_putstr("child");
+            close(cs);
+//            exit(0);
+//            handle_command(char *
+            //execute
+            break;
+        }
+    }
+}
 int	main(int ac, char ** av)
 {
-	int port;
-	int sock;
-	int cs;
-	unsigned int		cslen;
-	struct sockaddr_in	csin;
-	char	buf[1024];
-	int	r;
-
-        if (ac == 1)
-            return (1);
-	FILE *outputFile = fopen("output.txt", "wb");
-	port = ft_atoi(av[1]);
-	sock = create_server(port);
-	cs = accept(sock, (struct sockaddr*)&csin, &cslen);
-	while (1)
-	{
-		char recvBuff[1000];
-	
-		int bytesReceived = recv(cs, recvBuff, 1000, 0);
-/*		while(bytesReceived != 0)
-		{
-			
-			// you should add error checking here
-			fwrite(recvBuff, bytesReceived, 1, outputFile);
-			
-			bytesReceived = recv(cs, recvBuff, 10, 0);
-                        }*/
-                if (bytesReceived != 0)
-                    ft_putstr(recvBuff);
-	}
-	close(cs);
-	close(sock);
-	return (0);
+    int port;
+    int sock;
+    unsigned int		cslen;
+    struct sockaddr_in	csin;
+    
+    if (ac == 1)
+        return (1);
+    port = ft_atoi(av[1]);
+    sock = create_server(port);
+    handle_processes(cslen, csin, sock);
+    close(sock);
+    return (0);
 }
 

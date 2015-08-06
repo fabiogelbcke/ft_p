@@ -3,7 +3,8 @@
 
 void				handle_command(char **cmd, char **entries)
 {
-	
+    if (!cmd || ! cmd[0])
+        return ;
 }
 
 char				**get_entry(void)
@@ -90,26 +91,13 @@ int	main(int ac, char ** av)
 		fprintf(stderr, "oh no!");
 		return 1;
 	}
-	/*
-	char sendBuffer[100];
-	
-// TODO: Check for errors here
-	int bytesRead = fread(sendBuffer, sizeof(sendBuffer), 1, inputFile);
-	
-	while(!feof(inputFile))
-	{
-		//TODO: check for errors here
-		send(sock, sendBuffer, bytesRead, 0);
-		bytesRead = fread(sendBuffer, sizeof(sendBuffer), 1, inputFile);
-	} 
-        */
         int bytesread = read(fd, buffer, 256);
         while (bytesread > 0)
         {
             send(sock, buffer, bytesread, 0);
             bytesread = read(fd,buffer,256);
         }
-//        close(sock);
+        sleep(20);
 //	client_shell(port, sock);
         close(sock);
 	return (0);
