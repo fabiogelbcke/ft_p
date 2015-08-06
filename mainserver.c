@@ -20,13 +20,39 @@ int	create_server(int port)
 	return (sock);
 }
 
-void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock)
+void    handle_connection(int cs)
 {
-    int cs;
     char buf[257];
-    int pid;
+    char **cmd;
 
     ft_memset(buf, 0, 257);
+    while (1)
+    {
+        recv(cs, buf, 256, );
+        cmd = ft_strsplit(buf, ' ');
+        if (ft_strcmp && ft_strcmp[0])
+        {
+            if (!ft_strcmp(cmd[0], "ls"))
+                ;
+            else if (!ft_strcmp(cmd[0], "cd"))
+                ;
+            else if (!ft_strcmp(cmd[0], "get"))
+                ;
+            else if (!ft_strcmp(cmd[0], "put"))
+                ;
+            else if (!ft_strcmp(cmd[0], "pwd"))
+                pwd();
+            else if (!ft_strcmp(cmd[0], "quit"))
+                return ;
+        }
+    }
+}
+
+void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock, char** envp)
+{
+    int cs;
+    int pid;
+
     while (1)
     {
         ft_putstr("oi");
@@ -39,28 +65,18 @@ void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock)
         }
         else if (pid > 0)
         {
-//            wait(&status);
             close(cs);
-            ft_putstr("parent");
             continue;
-            //parent process
         }
         else if (pid == 0)
         {
-            int bytesReceived = recv(cs, buf, 1000, 0);
-            
-            if (bytesReceived != 0)
-                ft_putstr(buf);
-            ft_putstr("child");
+            handle_connection(cs, envp);
             close(cs);
-//            exit(0);
-//            handle_command(char *
-            //execute
             break;
         }
     }
 }
-int	main(int ac, char ** av)
+int	main(int ac, char ** av, char **envp)
 {
     int port;
     int sock;
@@ -71,7 +87,7 @@ int	main(int ac, char ** av)
         return (1);
     port = ft_atoi(av[1]);
     sock = create_server(port);
-    handle_processes(cslen, csin, sock);
+    handle_processes(cslen, csin, sock, envp);
     close(sock);
     return (0);
 }
