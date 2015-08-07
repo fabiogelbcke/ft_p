@@ -9,12 +9,10 @@ void    pwd(int cs, char **envp)
     getcwd(cwd, 200);
     home = get_env("PWD", envp);
     relcwd = ft_strsub(cwd, ft_strlen(home), ft_strlen(cwd) - ft_strlen(home));
-//    ft_putstr(relcwd);
     if (ft_strlen(relcwd) == 0)
         write(cs, "/\n", 2);
     else
         write(cs, ft_strjoin(relcwd, "\n"), ft_strlen(relcwd) + 1);
-    ft_putstr("oi");
 
 }
 void    ls(int cs, char **cmd)
@@ -23,7 +21,7 @@ void    ls(int cs, char **cmd)
     char buf[256];
     int size;
 
-    ft_putstr("oae");
+    cmd[1] = NULL;
     if (dup2(cs, 1) > 0)
         execv("/bin/ls", cmd);
     else
