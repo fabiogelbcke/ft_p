@@ -1,0 +1,9 @@
+#include "server.h"
+
+void    pwd(char **envp)
+{
+    char cwd[200];
+
+    getcwd(cwd, 200);
+    ft_putstr(cwd)
+}

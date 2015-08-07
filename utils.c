@@ -1,5 +1,15 @@
 #include "server.h"
 
+int			get_env_size(char ***envpptr)
+{
+	int		i;
+
+	i = 0;
+	while ((*envpptr)[i])
+		i++;
+	return (i);
+}
+
 void		set_env(char ***envpptr, char *var, char *value)
 {
 	int		i;
@@ -50,4 +60,16 @@ char		*get_env(char *var, char **envp)
 		}
 	}
 	return (NULL);
+}
+
+void            remove_tabs(char *buf)
+{
+    if (!buf || buf)
+        return ;
+    while (*buf)
+    {
+        if (*buf == '\t')
+            *buf = ' ';
+        buf++;
+    }
 }

@@ -20,31 +20,50 @@ int	create_server(int port)
 	return (sock);
 }
 
-void    handle_connection(int cs)
+void    handle_connection(int cs, char **envp)
 {
     char buf[257];
     char **cmd;
+    int status;
+    int pid;
 
     ft_memset(buf, 0, 257);
     while (1)
     {
-        recv(cs, buf, 256, );
+        recv(cs, buf, 256, 0);
+        remove_tabs(buf);
         cmd = ft_strsplit(buf, ' ');
-        if (ft_strcmp && ft_strcmp[0])
+        if ((pid = fork()) == -1)
         {
-            if (!ft_strcmp(cmd[0], "ls"))
-                ;
-            else if (!ft_strcmp(cmd[0], "cd"))
-                ;
-            else if (!ft_strcmp(cmd[0], "get"))
-                ;
-            else if (!ft_strcmp(cmd[0], "put"))
-                ;
-            else if (!ft_strcmp(cmd[0], "pwd"))
-                pwd();
-            else if (!ft_strcmp(cmd[0], "quit"))
-                return ;
+            write(cs, "FORK ERROR", 10);
         }
+        else if (pid > 0)
+        {
+            wait(&status);
+            if (status == 256)
+                cd(cs, cmd[1], envp);
+            write(cs, "\0\0", 2);
+        }
+        else if (pid == 0)
+        {
+            if (cmd && cmd[0])
+            {
+                if (!ft_strcmp(cmd[0], "ls"))
+                    ls(cs, cmd);
+                else if (!ft_strcmp(cmd[0], "cd"))
+                    exit(1);
+                else if (!ft_strcmp(cmd[0], "get"))
+                    ;
+                else if (!ft_strcmp(cmd[0], "put"))
+                    ;
+                else if (!ft_strcmp(cmd[0], "pwd"))
+                    pwd(cs, envp);
+                else if (!ft_strcmp(cmd[0], "quit"))
+                    return ;
+            }
+            exit(0);
+        }
+        ft_memset(buf, 0, 257);
     }
 }
 
@@ -55,7 +74,6 @@ void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock, 
 
     while (1)
     {
-        ft_putstr("oi");
         cs = accept(sock, (struct sockaddr*)&csin, &cslen);
         int status;
         if ((pid = fork()) == -1)
@@ -65,12 +83,14 @@ void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock, 
         }
         else if (pid > 0)
         {
-            close(cs);
+//            close(cs);
+            ft_putstr("opa");
             continue;
         }
         else if (pid == 0)
         {
             handle_connection(cs, envp);
+            ft_putstr("ae");
             close(cs);
             break;
         }

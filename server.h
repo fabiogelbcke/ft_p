@@ -14,4 +14,11 @@
 # include <arpa/inet.h>
 # include <errno.h>
 
+void    set_env(char ***envpptr, char *var, char *value);
+char    *get_env(char *var, char **envp);
+void    remove_tabs(char *buf);
+void    pwd(int cs, char **envp);
+void    ls(int cs, char**cmd);
+void    cd(int cs, char *dir, char **envp);
+
 #endif

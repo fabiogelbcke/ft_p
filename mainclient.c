@@ -1,10 +1,14 @@
 #include "server.h"
 
 
-void				handle_command(char **cmd, char **entries)
+void				handle_command(char *cmd, int sock)
 {
     if (!cmd || ! cmd[0])
         return ;
+    else
+    {
+        send(sock, cmd, ft_strlen(cmd), 0);
+    }
 }
 
 char				**get_entry(void)
@@ -52,9 +56,11 @@ void	client_shell(int port, int sock)
 {
 	char			**cmd;
 	char			**entries;
+        char                    buff[256];
+        int                     bytesread;
 
 	entries = NULL;
- 	 while (1)
+ 	while (1)
 	{
 		if (!entries || (!*(entries)))
 			ft_putstr("$> ");
@@ -62,10 +68,13 @@ void	client_shell(int port, int sock)
 		while (*entries)
 		{
 			cmd = ft_strsplit(*entries, ' ');
-			if (cmd[0] && !ft_strcmp(cmd[0], "exit"))
-				return ;
-			handle_command(cmd, entries);
-			write(sock, cmd[0], ft_strlen(cmd[0]) + 1);
+			write(sock, *entries, ft_strlen(*entries));
+                        while((bytesread = read(sock, buff, 256)) > 0
+                              && (buff[0] != '\0' || buff[1] != '\0'))
+                        {
+                            write(1, buff, bytesread);
+                            ft_memset(buff, 0, 256);
+                        }
 			entries++;
 		}
 	}
@@ -84,21 +93,7 @@ int	main(int ac, char ** av)
         }
 	port = ft_atoi(av[2]);
 	sock = create_client(av[1], port);
-        int fd = open("inputFile.txt", O_RDONLY);
-	
-	if(fd < 0)
-	{
-		fprintf(stderr, "oh no!");
-		return 1;
-	}
-        int bytesread = read(fd, buffer, 256);
-        while (bytesread > 0)
-        {
-            send(sock, buffer, bytesread, 0);
-            bytesread = read(fd,buffer,256);
-        }
-        sleep(20);
-//	client_shell(port, sock);
+	client_shell(port, sock);
         close(sock);
 	return (0);
 }
