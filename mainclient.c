@@ -1,14 +1,14 @@
 #include "server.h"
 
 
-void				handle_command(char *cmd, int sock)
+
+void                            file_transfers(int sock, char **cmd)
 {
-    if (!cmd || ! cmd[0])
-        return ;
+    if (!ft_strcmp(cmd[0], "get"))
+        if (cmd[1])
+            get(sock, cmd[1]);
     else
-    {
-        send(sock, cmd, ft_strlen(cmd), 0);
-    }
+        ;
 }
 
 char				**get_entry(void)
@@ -69,13 +69,18 @@ void	client_shell(int port, int sock)
 		{
 			cmd = ft_strsplit(*entries, ' ');
 			write(sock, *entries, ft_strlen(*entries));
-                        while((bytesread = read(sock, buff, 256)) > 0
-                              && (buff[0] != '\0' || buff[1] != '\0'))
+                        if (!ft_strcmp(cmd[0], "get") || !ft_strcmp(cmd[0], "put"))
+                            file_transfers(cmd);
+                        else
                         {
-                            write(1, buff, bytesread);
-                            ft_memset(buff, 0, 256);
+                            while((bytesread = read(sock, buff, 256)) > 0
+                                  && (buff[0] != '\0' || buff[1] != '\0'))
+                            {
+                                write(1, buff, bytesread);
+                                ft_memset(buff, 0, 256);
+                            }
                         }
-			entries++;
+                        entries++;
 		}
 	}
 }

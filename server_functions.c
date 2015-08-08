@@ -47,5 +47,39 @@ void    cd(int cs, char *dir, char **envp)
         if (!ft_strstr(cwd, home))
             chdir(home);
     }
+}
+
+void    get(int cs, char **cmd)
+{
+    int fd;
+    struct stat stratbuf;
+    int bytesRead;
+    char buf[257];
     
+    if (!cmd[1])
+    {
+        write(cs, "ERROR file not speficied\n", 25);
+        return;
+    }
+    fd = open(cmd[1], O_RDONLY);
+    if (ft == -1)
+    {
+        write(cs, "ERROR file couldnt be opened\n", 29);
+        return;
+    }
+    fstat(fd, statbuf);
+    if (S_ISDIR(statbuf.st_mode))
+    {
+        write(cs, "ERROR its a directory\n", 22);
+        return;
+    }
+    ft_memset(buf, 0, 257);
+    bytesRead = read(fd, buf, 256);
+    while (bytesRead > 0)
+    {
+        write(cs, buf, bytesRead);
+        bytesRead = read(fd, buf, 256);
+    }
+    if (bytesRead == -1)
+        write(cs, "Error reading file\n", 19);
 }

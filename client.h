@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-# define SERVER_H
+#ifndef CLIENT_H
+# define CLIENT_H
 
 # define BUFF_SIZE 1024
 
@@ -15,11 +15,6 @@
 # include <arpa/inet.h>
 # include <errno.h>
 
-void    set_env(char ***envpptr, char *var, char *value);
-char    *get_env(char *var, char **envp);
-void    remove_tabs(char *buf);
-void    pwd(int cs, char **envp);
-void    ls(int cs, char**cmd);
-void    cd(int cs, char *dir, char **envp);
+void    get(int sock, char *filename);
 
 #endif
