@@ -49,28 +49,44 @@ void    cd(int cs, char *dir, char **envp)
     }
 }
 
+void	get_error(int error)
+{
+	write(cs, "\0\0", 2);
+	if (error == 1)
+		write(cs, "ERROR file not specified\n", 25);
+	if (error == 1)
+		write(cs, "ERROR server could not open file\n", 29);
+	if (error == 1)
+		write(cs, "ERROR file is directory, cant copy directory\n", 45);
+	if (error == 1)
+		write(cs, "ERROR error reading file", 25);
+	return (1);
+}
+
 void    get(int cs, char **cmd)
 {
     int fd;
-    struct stat stratbuf;
+    struct stat statbuf;
     int bytesRead;
     char buf[257];
-    
+	int error;
+	
+    error = 0;
     if (!cmd[1])
     {
-        write(cs, "ERROR file not speficied\n", 25);
+		error = get_error(1);
         return;
     }
     fd = open(cmd[1], O_RDONLY);
-    if (ft == -1)
+    if (fd == -1)
     {
-        write(cs, "ERROR file couldnt be opened\n", 29);
+		error = get_error(2);
         return;
     }
-    fstat(fd, statbuf);
+	fstat(fd, &statbuf);
     if (S_ISDIR(statbuf.st_mode))
     {
-        write(cs, "ERROR its a directory\n", 22);
+		error = get_error(3);
         return;
     }
     ft_memset(buf, 0, 257);
@@ -79,7 +95,8 @@ void    get(int cs, char **cmd)
     {
         write(cs, buf, bytesRead);
         bytesRead = read(fd, buf, 256);
+		ft_memset(buf, 0, 257);
     }
     if (bytesRead == -1)
-        write(cs, "Error reading file\n", 19);
+		get_error(4);
 }

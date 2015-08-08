@@ -53,7 +53,7 @@ void    handle_connection(int cs, char **envp)
                 else if (!ft_strcmp(cmd[0], "cd"))
                     exit(1);
                 else if (!ft_strcmp(cmd[0], "get"))
-                    get(cmd);
+                    get(cs, cmd);
                 else if (!ft_strcmp(cmd[0], "put"))
                     ;
                 else if (!ft_strcmp(cmd[0], "pwd"))

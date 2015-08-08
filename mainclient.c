@@ -1,12 +1,14 @@
-#include "server.h"
+#include "client.h"
 
 
 
 void                            file_transfers(int sock, char **cmd)
 {
     if (!ft_strcmp(cmd[0], "get"))
+	{
         if (cmd[1])
             get(sock, cmd[1]);
+	}
     else
         ;
 }
@@ -70,7 +72,7 @@ void	client_shell(int port, int sock)
 			cmd = ft_strsplit(*entries, ' ');
 			write(sock, *entries, ft_strlen(*entries));
                         if (!ft_strcmp(cmd[0], "get") || !ft_strcmp(cmd[0], "put"))
-                            file_transfers(cmd);
+                            file_transfers(sock, cmd);
                         else
                         {
                             while((bytesread = read(sock, buff, 256)) > 0
