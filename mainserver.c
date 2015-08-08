@@ -83,8 +83,6 @@ void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock, 
         }
         else if (pid > 0)
         {
-//            close(cs);
-            ft_putstr("opa");
             continue;
         }
         else if (pid == 0)
