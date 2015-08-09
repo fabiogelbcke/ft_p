@@ -8,7 +8,8 @@ void    pwd(int cs, char **envp)
 
     getcwd(cwd, 200);
     home = get_env("PWD", envp);
-    relcwd = ft_strsub(cwd, ft_strlen(home), ft_strlen(cwd) - ft_strlen(home));
+    relcwd = ft_strstr(cwd, home);
+	relcwd += ft_strlen(home);
     if (ft_strlen(relcwd) == 0)
         write(cs, "/\n", 2);
     else
@@ -97,6 +98,7 @@ void    get(int cs, char **cmd)
 		ft_memset(buf, 0, 257);
         bytesRead = read(fd, buf, 256);
     }
+	ft_putstr("transfer done\n");
     if (bytesRead == -1)
 		get_error(4, cs);
 }

@@ -11,6 +11,7 @@ void                            file_transfers(int sock, char **cmd)
 	}
     else
         ;
+	ft_putstr("oi");
 }
 
 char				**get_entry(void)

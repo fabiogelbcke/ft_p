@@ -22,7 +22,7 @@ void get(int sock, char *filename)
 		get_error(sock);
 		return ;
 	}
-	fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC);
+	fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
     if (fd == -1)
     {
         if (errno == EEXIST)
@@ -37,6 +37,8 @@ void get(int sock, char *filename)
     {
         write(fd, buf, bytesread);
 		ft_memset(buf, 0, 257);
+		if (bytesread != 256)
+			break;
 		bytesread = read(sock, buf, 256);
     }
 	close(fd);
