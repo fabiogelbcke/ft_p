@@ -64,6 +64,28 @@ int	get_error(int error, int cs)
 	return (1);
 }
 
+void	put(int cs, char **cmd)
+{
+	int bytesread;
+	char buf[257];
+	int fd;
+
+	ft_memset(buf, 0, 257);
+	fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+	if (fd == -1)
+	{
+		put_error(1);
+		return;
+	}
+	while ((bytesread = read(cs, buf, 256)) > 0)
+	{
+		write(fd, buf, bytesread);
+		ft_memset(buf, 0, 257);
+		if (bytesread < 256)
+			break;
+	}
+}
+
 void    get(int cs, char **cmd)
 {
     int fd;
@@ -98,7 +120,6 @@ void    get(int cs, char **cmd)
 		ft_memset(buf, 0, 257);
         bytesRead = read(fd, buf, 256);
     }
-	ft_putstr("transfer done\n");
     if (bytesRead == -1)
 		get_error(4, cs);
 }

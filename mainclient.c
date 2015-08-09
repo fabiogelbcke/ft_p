@@ -10,8 +10,8 @@ void                            file_transfers(int sock, char **cmd)
             get(sock, cmd[1]);
 	}
     else
-        ;
-	ft_putstr("oi");
+		if (cmd[1])
+			put(sock, cmd[1]);
 }
 
 char				**get_entry(void)
@@ -43,14 +43,19 @@ int	create_client(char *addr, int port)
 
 	proto = getprotobyname("tcp");
 	if (!proto)
+	{
+		ft_putstr("Connection error\n");
 		return (-1);
+	}
 	sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
 	sin.sin_addr.s_addr = inet_addr(addr);
 	if (connect(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
-		ft_putstr("Connect error");
-
+	{
+		ft_putstr("Connection error\n");
+		exit(1);
+	}
 	listen(sock, 50);
 	return (sock);
 }
@@ -71,19 +76,20 @@ void	client_shell(int port, int sock)
 		while (*entries)
 		{
 			cmd = ft_strsplit(*entries, ' ');
-			write(sock, *entries, ft_strlen(*entries));
-                        if (!ft_strcmp(cmd[0], "get") || !ft_strcmp(cmd[0], "put"))
-                            file_transfers(sock, cmd);
-                        else
-                        {
-                            while((bytesread = read(sock, buff, 256)) > 0
-                                  && (buff[0] != '\0' || buff[1] != '\0'))
-                            {
-                                write(1, buff, bytesread);
-                                ft_memset(buff, 0, 256);
-                            }
-                        }
-                        entries++;
+			if (ft_strcmp(cmd[0], "put"))
+				write(sock, *entries, ft_strlen(*entries));
+			if (!ft_strcmp(cmd[0], "get") || !ft_strcmp(cmd[0], "put"))
+				file_transfers(sock, cmd);
+			else
+			{
+				while((bytesread = read(sock, buff, 256)) > 0
+					  && (buff[0] != '\0' || buff[1] != '\0'))
+				{
+					write(1, buff, bytesread);
+					ft_memset(buff, 0, 256);
+				}
+			}
+			entries++;
 		}
 	}
 }

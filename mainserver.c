@@ -42,7 +42,6 @@ void    handle_connection(int cs, char **envp)
             wait(&status);
             if (status == 256)
                 cd(cs, cmd[1], envp);
-			ft_putstr("command done");
             write(cs, "\0\0", 2);
         }
         else if (pid == 0)
