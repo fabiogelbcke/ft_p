@@ -2,7 +2,7 @@
 
 
 
-void                            file_transfers(int sock, char **cmd)
+void                            file_transfers(int sock, char **cmd, char *command)
 {
     if (!ft_strcmp(cmd[0], "get"))
 	{
@@ -11,7 +11,7 @@ void                            file_transfers(int sock, char **cmd)
 	}
     else
 		if (cmd[1])
-			put(sock, cmd[1]);
+			put(sock, cmd[1], command);
 }
 
 char				**get_entry(void)
@@ -79,7 +79,7 @@ void	client_shell(int port, int sock)
 			if (ft_strcmp(cmd[0], "put"))
 				write(sock, *entries, ft_strlen(*entries));
 			if (!ft_strcmp(cmd[0], "get") || !ft_strcmp(cmd[0], "put"))
-				file_transfers(sock, cmd);
+				file_transfers(sock, cmd, *entries);
 			else
 			{
 				while((bytesread = read(sock, buff, 256)) > 0

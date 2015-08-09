@@ -71,19 +71,29 @@ void	put(int cs, char **cmd)
 	int fd;
 
 	ft_memset(buf, 0, 257);
-	fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+	fd = open(cmd[1], O_WRONLY|O_CREAT|O_TRUNC, 0777);
 	if (fd == -1)
 	{
-		put_error(1);
-		return;
+		while ((bytesread = read(cs, buf, 256)) == 256)
+			;
+		if (errno == EEXIST)
+            write(cs, "ERROR. A file with this name already exists. Change that file's name or change directory\n", 89);
+        else
+            write(cs, "ERROR couldnt create file\n", 25);
+		return ;
 	}
 	while ((bytesread = read(cs, buf, 256)) > 0)
 	{
-		write(fd, buf, bytesread);
+		if (fd != -1)
+			write(fd, buf, bytesread);
 		ft_memset(buf, 0, 257);
 		if (bytesread < 256)
 			break;
 	}
+	if (bytesread != -1)
+		write(cs, "SUCCESSFUL TRANSFER", 20);
+	else
+		write(cs, "ERROR WRITING FILE", 18);
 }
 
 void    get(int cs, char **cmd)

@@ -37,7 +37,7 @@ void get(int sock, char *filename)
     {
         write(fd, buf, bytesread);
 		ft_memset(buf, 0, 257);
-		if (bytesread != 256)
+		if (bytesread < 256)
 			break;
 		bytesread = read(sock, buf, 256);
     }
@@ -67,11 +67,14 @@ void put(int sock, char *filename, char *command)
 	}
 	write(sock, command, ft_strlen(command));
 	ft_memset(buf, 0, 257);
-	while (bytesread = read(fd, buf, 256) > 0)
+	while ((bytesread = read(fd, buf, 256)) > 0)
 	{
 		write(sock, buf, bytesread);
 		ft_memset(buf, 0, 257);
 	}
 	if (bytesread == 1)
 		ft_putstr("error during file read\n");
+	read(sock, buf, 256);
+	ft_putstr(buf);
+	ft_putchar('\n');
 }
