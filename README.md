@@ -35,3 +35,5 @@ It must also use fork to allow for more than one client connected at a time and 
 Bonuses:
 
 lcd, lls and lpwd for local comands in client.
+; allowed on client prompt
+
