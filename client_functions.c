@@ -7,6 +7,7 @@ void get_error(int sock)
 	ft_memset(buf, 0, 257);
 	read(sock, buf, 256);
 	ft_putstr(buf);
+	ft_putstr("oi");
 }
 
 void get(int sock, char *filename)
