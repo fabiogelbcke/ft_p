@@ -57,7 +57,7 @@ void    handle_connection(int cs, char **envp)
                 else if (!ft_strcmp(cmd[0], "get"))
                     get(cs, cmd);
                 else if (!ft_strcmp(cmd[0], "put"))
-                    ;
+                    put(cs, cmd);
                 else if (!ft_strcmp(cmd[0], "pwd"))
                     pwd(cs, envp);
                 else if (!ft_strcmp(cmd[0], "quit"))

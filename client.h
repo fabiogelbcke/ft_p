@@ -17,5 +17,6 @@
 
 void    get(int sock, char *filename);
 void	put(int sock, char *filename, char *command);
+void	local_commands(char **cmd);
 
 #endif

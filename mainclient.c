@@ -64,7 +64,7 @@ void	client_shell(int port, int sock)
 {
 	char			**cmd;
 	char			**entries;
-        char                    buff[257];
+        char                    buf[257];
         int                     bytesread;
 
 	entries = NULL;
@@ -75,19 +75,21 @@ void	client_shell(int port, int sock)
 		entries = get_entry();
 		while (*entries)
 		{
-			ft_memset(buff, 0, 257);
+			ft_memset(buf, 0, 257);
 			cmd = ft_strsplit(*entries, ' ');
-			if (ft_strcmp(cmd[0], "put"))
+			if (ft_strcmp(cmd[0], "put") && ft_strcmp(cmd[0], "lcd") && ft_strcmp(cmd[0], "lls") && ft_strcmp(cmd[0], "lpwd"))
 				write(sock, *entries, ft_strlen(*entries));
 			if (!ft_strcmp(cmd[0], "get") || !ft_strcmp(cmd[0], "put"))
 				file_transfers(sock, cmd, *entries);
+			else if (!ft_strcmp(cmd[0], "lcd") || !ft_strcmp(cmd[0], "lls") || !ft_strcmp(cmd[0], "lpwd"))
+				local_commands(cmd);
 			else
 			{
-				while((bytesread = read(sock, buff, 256)) > 0
-					  && (buff[0] != '\0' || buff[1] != '\0'))
+				while((bytesread = read(sock, buf, 256)) > 0
+					  && (buf[0] != '\0' || buf[1] != '\0'))
 				{
-					write(1, buff, bytesread);
-					ft_memset(buff, 0, 257);
+					write(1, buf, bytesread);
+					ft_memset(buf, 0, 257);
 				}
 			}
 			entries++;
@@ -99,7 +101,6 @@ int	main(int ac, char ** av)
 {
 	int port;
 	int sock;
-	char buffer[256];
 
 	if (ac < 3)
         {
