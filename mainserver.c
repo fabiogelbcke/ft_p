@@ -27,9 +27,10 @@ void    handle_connection(int cs, char **envp)
     int status;
     int pid;
 
-    ft_memset(buf, 0, 257);
+
     while (1)
     {
+		ft_memset(buf, 0, 257);
         recv(cs, buf, 256, 0);
         remove_tabs(buf);
         cmd = ft_strsplit(buf, ' ');
@@ -46,6 +47,7 @@ void    handle_connection(int cs, char **envp)
         }
         else if (pid == 0)
         {
+			ft_putstr(cmd[0]);
             if (cmd && cmd[0])
             {
                 if (!ft_strcmp(cmd[0], "ls"))
@@ -61,9 +63,9 @@ void    handle_connection(int cs, char **envp)
                 else if (!ft_strcmp(cmd[0], "quit"))
                     return ;
             }
+			ft_memset(buf, 0, 257);
             exit(0);
         }
-        ft_memset(buf, 0, 257);
     }
 }
 

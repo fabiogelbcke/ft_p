@@ -22,6 +22,7 @@ void    ls(int cs, char **cmd)
     char buf[256];
     int size;
 
+	ft_putstr("ls");
     cmd[1] = NULL;
     if (dup2(cs, 1) > 0)
         execv("/bin/ls", cmd);
@@ -52,15 +53,14 @@ void    cd(int cs, char *dir, char **envp)
 
 int	get_error(int error, int cs)
 {
-	write(cs, "\0\0", 2);
 	if (error == 1)
-		write(cs, "ERROR file not specified\n", 25);
+		write(cs, "\0\0ERROR file not specified\n", 27);
 	if (error == 2)
-		write(cs, "ERROR server could not open file\n", 29);
+		write(cs, "\0\0ERROR server could not open file\n", 36);
 	if (error == 3)
-		write(cs, "ERROR file is directory, cant copy directory\n", 45);
+		write(cs, "\0\0ERROR file is directory, cant copy directory\n", 47);
 	if (error == 4)
-		write(cs, "ERROR error reading file", 25);
+		write(cs, "\0\0ERROR error reading file", 27);
 	return (1);
 }
 
@@ -79,7 +79,7 @@ void	put(int cs, char **cmd)
 		if (errno == EEXIST)
             write(cs, "ERROR. A file with this name already exists. Change that file's name or change directory\n", 89);
         else
-            write(cs, "ERROR couldnt create file\n", 25);
+            write(cs, "ERROR couldnt create file\n", 27);
 		return ;
 	}
 	while ((bytesread = read(cs, buf, 256)) > 0)

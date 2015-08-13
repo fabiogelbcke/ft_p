@@ -64,7 +64,7 @@ void	client_shell(int port, int sock)
 {
 	char			**cmd;
 	char			**entries;
-        char                    buff[256];
+        char                    buff[257];
         int                     bytesread;
 
 	entries = NULL;
@@ -75,6 +75,7 @@ void	client_shell(int port, int sock)
 		entries = get_entry();
 		while (*entries)
 		{
+			ft_memset(buff, 0, 257);
 			cmd = ft_strsplit(*entries, ' ');
 			if (ft_strcmp(cmd[0], "put"))
 				write(sock, *entries, ft_strlen(*entries));
@@ -86,7 +87,7 @@ void	client_shell(int port, int sock)
 					  && (buff[0] != '\0' || buff[1] != '\0'))
 				{
 					write(1, buff, bytesread);
-					ft_memset(buff, 0, 256);
+					ft_memset(buff, 0, 257);
 				}
 			}
 			entries++;

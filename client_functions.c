@@ -6,8 +6,7 @@ void get_error(int sock)
 
 	ft_memset(buf, 0, 257);
 	read(sock, buf, 256);
-	ft_putstr(buf);
-	ft_putstr("oi");
+	ft_putstr(&buf[2]);
 }
 
 void get(int sock, char *filename)
@@ -20,7 +19,8 @@ void get(int sock, char *filename)
 	bytesread = read(sock, buf, 256);
 	if (buf[0] == '\0' && buf[1] == '\0')
 	{
-		get_error(sock);
+		ft_putstr(&buf[2]);
+		get_error(sock);		
 		return ;
 	}
 	fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
