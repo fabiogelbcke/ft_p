@@ -102,6 +102,8 @@ int	main(int ac, char ** av)
 	int port;
 	int sock;
 
+        if (!ft_strcmp(av[1], "localhost"))
+            av[1] = ft_strdup("127.0.0.1");
 	if (ac < 3)
         {
 		ft_putendl("usage");

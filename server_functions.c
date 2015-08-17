@@ -22,7 +22,6 @@ void    ls(int cs, char **cmd)
     char buf[256];
     int size;
 
-	ft_putstr("ls");
     cmd[1] = NULL;
     if (dup2(cs, 1) > 0)
         execv("/bin/ls", cmd);
@@ -34,18 +33,15 @@ void    cd(int cs, char *dir, char **envp)
 {
     char cwd[256];
     char *home;
-    
-    
 
-    ft_putstr(dir);
-        ft_putchar('\n');
-    if (chdir(dir) == -1)
+    home = get_env("PWD", envp);
+    if (!dir)
+        chdir(home);
+    else if (chdir(dir) == -1)
         write(cs, "No such file or directory\n", 26);
     else
     {
         getcwd(cwd, 256);
-        ft_putstr(cwd);
-        home = get_env("PWD", envp);
         if (!ft_strstr(cwd, home))
             chdir(home);
     }
@@ -64,13 +60,15 @@ int	get_error(int error, int cs)
 	return (1);
 }
 
-void	put(int cs, char **cmd)
+void	put(int cs, char **cmd, char *ip)
 {
 	int bytesread;
 	char buf[257];
 	int fd;
 
+        
 	ft_memset(buf, 0, 257);
+        printf("PUT request from %s for file %s", ip, cmd[1]);
 	fd = open(cmd[1], O_WRONLY|O_CREAT|O_TRUNC, 0777);
 	if (fd == -1)
 	{
@@ -96,7 +94,7 @@ void	put(int cs, char **cmd)
 		write(cs, "ERROR WRITING FILE", 18);
 }
 
-void    get(int cs, char **cmd)
+void    get(int cs, char **cmd, char *ip)
 {
     int fd;
     struct stat statbuf;
@@ -110,6 +108,7 @@ void    get(int cs, char **cmd)
 		error = get_error(1, cs);
         return;
     }
+    printf("GET request from %s for file %s\n", ip, cmd[1]);
     fd = open(cmd[1], O_RDONLY);
     if (fd == -1)
     {
