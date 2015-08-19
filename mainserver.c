@@ -102,11 +102,10 @@ void    handle_processes(unsigned int cslen, struct sockaddr_in csin, int sock, 
     int cs;
     int pid;
     char *ip;
-
+    
     while (1)
     {
         cs = accept(sock, (struct sockaddr*)&csin, &cslen);
-        int status;
         if ((pid = fork()) == -1)
         {
             close(cs);
@@ -131,6 +130,7 @@ int	main(int ac, char ** av, char **envp)
     unsigned int		cslen;
     struct sockaddr_in	csin;
     
+    cslen = 0;
     if (ac == 1)
         return (1);
     port = ft_atoi(av[1]);

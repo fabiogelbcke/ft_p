@@ -1,40 +1,40 @@
 CC = gcc
 
-FLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 SRC_C =	mainclient.c \
+	client_local_functions.c \
+	client_functions.c \
 
 SRC_S = mainserver.c \
+	server_functions.c \
+	utils.c \
 
-OBJ_C	= $(SRC_C:.c=.o)
+OBJ_C = $(SRC_C:.c=.o)
 
-OBJ_S	= $(SRC_S:.c=.o)
+OBJ_S = $(SRC_S:.c=.o)
 
-LIB 	= libft/libft.a
+LIB = libft/libft.a
 
 NAME_C = client
 
-NAME_S = server
+NAME_S = serveur
 
-all: client server
-
-client: $(NAME_C)
-
-server: $(NAME_S)
+all:	$(NAME_C) $(NAME_S)
 
 $(NAME_C): $(OBJ_C)
-	$(MAKE) -C ./libft	
+	make -C ./libft
 	$(CC) -o $(NAME_C) $(FLAGS) $(OBJ_C) $(LIB)
 
 $(NAME_S): $(OBJ_S)
-	$(MAKE) -C ./libft
+	make -C ./libft
 	$(CC) -o $(NAME_S) $(FLAGS) $(OBJ_S) $(LIB)
 
 clean:
 	rm -f $(OBJ_C) $(OBJ_S)
 
 fclean:	clean
-	rm -f $(NAME_S) $(NAME_C)
+	rm -rf $(NAME_C) $(NAME_S)
 
 re: fclean all
 

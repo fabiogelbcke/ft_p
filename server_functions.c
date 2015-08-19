@@ -18,10 +18,6 @@ void    pwd(int cs, char **envp)
 }
 void    ls(int cs, char **cmd)
 {
-    int pid;
-    char buf[256];
-    int size;
-
     cmd[1] = NULL;
     if (dup2(cs, 1) > 0)
         execv("/bin/ls", cmd);

@@ -41,7 +41,6 @@ void		set_env(char ***envpptr, char *var, char *value)
 char		*get_env(char *var, char **envp)
 {
 	int		i;
-	char	**envvar;
 	char	**split;
 
 	if (var)

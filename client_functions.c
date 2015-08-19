@@ -52,30 +52,29 @@ void put(int sock, char *filename, char *command)
     struct stat statbuf;
     int bytesread;
     char buf[257];
-	int error;
-
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		ft_putstr("ERROR couldn't open file\n");
-		return ;
-	}
-	fstat(fd, &statbuf);
-	if (S_ISDIR(statbuf.st_mode))
-	{
-		ft_putstr("ERROR can't send directory\n");
-		return ; 
-	}
-	write(sock, command, ft_strlen(command));
-	ft_memset(buf, 0, 257);
-	while ((bytesread = read(fd, buf, 256)) > 0)
-	{
-		write(sock, buf, bytesread);
-		ft_memset(buf, 0, 257);
-	}
-	if (bytesread == 1)
-		ft_putstr("error during file read\n");
-	read(sock, buf, 256);
-	ft_putstr(buf);
-	ft_putchar('\n');
+    
+    fd = open(filename, O_RDONLY);
+    if (fd == -1)
+    {
+        ft_putstr("ERROR couldn't open file\n");
+        return ;
+    }
+    fstat(fd, &statbuf);
+    if (S_ISDIR(statbuf.st_mode))
+    {
+        ft_putstr("ERROR can't send directory\n");
+        return ; 
+    }
+    write(sock, command, ft_strlen(command));
+    ft_memset(buf, 0, 257);
+    while ((bytesread = read(fd, buf, 256)) > 0)
+    {
+        write(sock, buf, bytesread);
+        ft_memset(buf, 0, 257);
+    }
+    if (bytesread == 1)
+        ft_putstr("error during file read\n");
+    read(sock, buf, 256);
+    ft_putstr(buf);
+    ft_putchar('\n');
 }

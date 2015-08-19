@@ -18,7 +18,6 @@ char				**get_entry(void)
 {
 	int			n;
 	char		*str;
-	int			size;
 	char		**entries;
 
 	n = 1;
@@ -60,7 +59,7 @@ int	create_client(char *addr, int port)
 	return (sock);
 }
 
-void	client_shell(int port, int sock)
+void	client_shell(int sock)
 {
 	char			**cmd;
 	char			**entries;
@@ -111,7 +110,7 @@ int	main(int ac, char ** av)
         }
 	port = ft_atoi(av[2]);
 	sock = create_client(av[1], port);
-	client_shell(port, sock);
+	client_shell(sock);
         close(sock);
 	return (0);
 }
