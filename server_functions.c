@@ -45,49 +45,49 @@ void    cd(int cs, char *dir, char **envp)
 
 int	get_error(int error, int cs)
 {
-	if (error == 1)
-		write(cs, "\0\0ERROR file not specified\n", 27);
-	if (error == 2)
-		write(cs, "\0\0ERROR server could not open file\n", 36);
-	if (error == 3)
-		write(cs, "\0\0ERROR file is directory, cant copy directory\n", 47);
-	if (error == 4)
-		write(cs, "\0\0ERROR error reading file", 27);
-	return (1);
+    if (error == 1)
+        write(cs, "\0\0ERROR file not specified\n", 27);
+    if (error == 2)
+        write(cs, "\0\0ERROR server could not open file\n", 36);
+    if (error == 3)
+        write(cs, "\0\0ERROR file is directory, cant copy directory\n", 47);
+    if (error == 4)
+        write(cs, "\0\0ERROR error reading file", 27);
+    return (1);
 }
 
 void	put(int cs, char **cmd, char *ip)
 {
-	int bytesread;
-	char buf[257];
-	int fd;
-
-        
-	ft_memset(buf, 0, 257);
-        printf("PUT request from %s for file %s", ip, cmd[1]);
-	fd = open(cmd[1], O_WRONLY|O_CREAT|O_TRUNC, 0777);
-	if (fd == -1)
-	{
-		while ((bytesread = read(cs, buf, 256)) == 256)
-			;
-		if (errno == EEXIST)
+    int bytesread;
+    char buf[257];
+    int fd;
+    
+    
+    ft_memset(buf, 0, 257);
+    printf("PUT request from %s for file %s\n", ip, cmd[1]);
+    fd = open(cmd[1], O_WRONLY|O_CREAT|O_EXCL, 0777);
+    if (fd == -1)
+    {
+        while ((bytesread = read(cs, buf, 256)) == 256)
+            ;
+        if (errno == EEXIST)
             write(cs, "ERROR. A file with this name already exists. Change that file's name or change directory\n", 89);
         else
             write(cs, "ERROR couldnt create file\n", 27);
-		return ;
-	}
-	while ((bytesread = read(cs, buf, 256)) > 0)
-	{
-		if (fd != -1)
-			write(fd, buf, bytesread);
-		ft_memset(buf, 0, 257);
-		if (bytesread < 256)
-			break;
-	}
-	if (bytesread != -1)
-		write(cs, "SUCCESSFUL TRANSFER", 20);
-	else
-		write(cs, "ERROR WRITING FILE", 18);
+        return ;
+    }
+    while ((bytesread = read(cs, buf, 256)) > 0)
+    {
+        if (fd != -1)
+            write(fd, buf, bytesread);
+        ft_memset(buf, 0, 257);
+        if (bytesread < 256)
+            break;
+    }
+    if (bytesread != -1)
+        write(cs, "SUCCESSFUL TRANSFER\n", 20);
+    else
+        write(cs, "ERROR WRITING FILE\n", 18);
 }
 
 void    get(int cs, char **cmd, char *ip)

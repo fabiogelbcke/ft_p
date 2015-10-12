@@ -23,11 +23,11 @@ void get(int sock, char *filename)
 		get_error(sock);		
 		return ;
 	}
-	fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+	fd = open(filename, O_WRONLY|O_CREAT|O_EXCL, 0777);
     if (fd == -1)
     {
         if (errno == EEXIST)
-            ft_putstr("ERROR. A file with this name already exists. Change that file's name or change directory\n");
+            ft_putstr("ERROR. A file with this name already exists locally\n");
         else
             ft_putstr("ERROR couldnt create file\n");
 		while ((bytesread = read(sock, buf, 256)) > 0
@@ -71,10 +71,11 @@ void put(int sock, char *filename, char *command)
     {
         write(sock, buf, bytesread);
         ft_memset(buf, 0, 257);
+        if (bytesread != 256)
+            break ;
     }
-    if (bytesread == 1)
+    if (bytesread == -1)
         ft_putstr("error during file read\n");
     read(sock, buf, 256);
     ft_putstr(buf);
-    ft_putchar('\n');
 }

@@ -16,7 +16,7 @@ OBJ_S = $(SRC_S:.c=.o)
 
 LIB = libft/libft.a
 
-NAME_C = client
+NAME_C = testfoler/client
 
 NAME_S = serveur
 

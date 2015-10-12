@@ -47,7 +47,8 @@ void    handle_connection(int cs, char **envp, char *ip)
             wait(&status);
             if (status == 256)
                 cd(cs, cmd[1], envp);
-            write(cs, "\0\0", 2);
+            if (ft_strcmp("put", cmd[0]))
+                write(cs, "\0\0", 2);
         }
         else if (pid == 0)
         {
